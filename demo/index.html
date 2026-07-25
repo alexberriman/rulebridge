@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>rulebridge playground</title>
+    <meta
+      name="description"
+      content="Convert rules between json-rules-engine, JsonLogic, json-logic-engine, filtrex, jexl, expr-eval, expression-eval and Casbin matchers."
+    />
+    <link rel="icon" href="./logo.svg" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="https://github.com/alexberriman/rulebridge">
+        <img src="./logo.svg" alt="" width="24" height="24" />
+        <span class="brand-name">rulebridge</span>
+      </a>
+      <small class="brand-tag">convert rules between any engine</small>
+      <nav class="toplinks">
+        <button id="share" type="button" class="link-btn" title="Copy a shareable link">copy link</button>
+        <a href="https://github.com/alexberriman/rulebridge">GitHub</a>
+        <a href="https://www.npmjs.com/package/rulebridge">npm</a>
+      </nav>
+    </header>
+
+    <main class="wrap">
+      <section class="block">
+        <div class="block-head">
+          <span class="pill">source</span>
+          <select id="from" aria-label="source format"></select>
+        </div>
+        <div class="editor">
+          <pre id="input-hl" class="hl-layer" aria-hidden="true"></pre>
+          <textarea
+            id="input"
+            spellcheck="false"
+            autocomplete="off"
+            autocapitalize="off"
+            aria-label="source rule"
+          ></textarea>
+        </div>
+        <div class="presets">
+          <span class="presets-label">examples</span>
+          <button class="preset" type="button" data-ex="age">age gate</button>
+          <button class="preset" type="button" data-ex="sub">subscription</button>
+          <button class="preset" type="button" data-ex="rbac">casbin RBAC</button>
+          <button class="preset" type="button" data-ex="member">active member</button>
+        </div>
+        <div class="meta">
+          <div class="facts">
+            <label for="facts">facts</label>
+            <div class="feditor">
+              <pre id="facts-hl" class="feditor-hl" aria-hidden="true"></pre>
+              <textarea
+                id="facts"
+                spellcheck="false"
+                placeholder='{ "name": "Harry Potter" }'
+              ></textarea>
+            </div>
+          </div>
+          <button id="evaluate" type="button" title="Evaluate (Ctrl/Cmd+Enter)">
+            evaluate
+          </button>
+          <code id="eval-result" class="eval-out"></code>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="block-head">
+          <span class="pill ghost">converted</span>
+          <small class="hint">every supported format updates live</small>
+        </div>
+        <div id="outputs" class="grid"></div>
+      </section>
+    </main>
+
+    <footer>
+      conversions run entirely in your browser
+      <span class="sep">·</span>
+      <a href="https://github.com/alexberriman/rulebridge#fidelity-and-limitations"
+        >limitations</a
+      >
+    </footer>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
