@@ -1,30 +1,18 @@
 /**
  * A Rust-style `Result` type representing either success (`Ok`) or failure
- * (`Err`).
+ * (`Err`). All conversions return a `Result` instead of throwing — conversion
+ * failures are structured data, never exceptions.
  *
- * `toJsonRule` returns a `Result` instead of throwing: a successful conversion is
- * an `Ok` carrying the converted {@link import("./types").JsonLogicRule}, and an
- * unconvertible condition is an `Err` carrying a structured
- * {@link import("./types").ConversionError}. Handle errors as data — never catch.
- *
- * Narrow with the `ok` discriminant, or use `.match()` / `.map()`:
+ * Narrow with the `ok` discriminant, or use the combinator methods:
  *
  * @example
  * ```ts
- * const result = toJsonRule(condition);
+ * const result = convert("json-rules-engine", "json-logic", condition);
  * if (result.ok) {
- *   jsonLogic.apply(result.value, facts);
+ *   use(result.value);
  * } else {
  *   console.error(result.error.message);
  * }
- * ```
- *
- * @example
- * ```ts
- * toJsonRule(condition).match(
- *   (rule) => jsonLogic.apply(rule, facts),
- *   (error) => console.error(error.message),
- * );
  * ```
  */
 export type Result<T, E> = Ok<T> | Err<E>;
@@ -32,46 +20,28 @@ export type Result<T, E> = Ok<T> | Err<E>;
 export interface Ok<T> {
   readonly ok: true;
   readonly value: T;
-  /** `true` when this is an `Ok`. */
   isOk(): true;
-  /** `false` when this is an `Ok`. */
   isErr(): false;
-  /** Returns the value. Throws if this is an `Err` (opt-in, like Rust's `unwrap`). */
   unwrap(): T;
-  /** Returns the value if `Ok`, otherwise `defaultValue`. */
   unwrapOr(defaultValue: T): T;
-  /** Returns the value if `Ok`, otherwise the result of `fn(error)`. */
   unwrapOrElse(fn: (error: never) => T): T;
-  /** Maps an `Ok` value via `fn`. `Err` is passed through unchanged. */
   map<U>(fn: (value: T) => U): Ok<U>;
-  /** Maps an `Err` error via `fn`. `Ok` is passed through unchanged. */
   mapErr<F>(fn: (error: never) => F): Ok<T>;
-  /** Chains a function that itself returns a `Result`. `Err` short-circuits. */
   andThen<U, E>(fn: (value: T) => Result<U, E>): Result<U, E>;
-  /** Runs `onOk` for `Ok`, `onErr` for `Err`. */
   match<A>(onOk: (value: T) => A, onErr: (error: never) => A): A;
 }
 
 export interface Err<E> {
   readonly ok: false;
   readonly error: E;
-  /** `false` when this is an `Err`. */
   isOk(): false;
-  /** `true` when this is an `Err`. */
   isErr(): true;
-  /** Throws (opt-in, like Rust's `unwrap`). */
   unwrap(): never;
-  /** Returns `defaultValue` (this is an `Err`). */
   unwrapOr<T>(defaultValue: T): T;
-  /** Returns the result of `fn(error)`. */
   unwrapOrElse<T>(fn: (error: E) => T): T;
-  /** `Err` is passed through unchanged. */
   map<U>(fn: (value: never) => U): Err<E>;
-  /** Maps an `Err` error via `fn`. */
   mapErr<F>(fn: (error: E) => F): Err<F>;
-  /** `Err` short-circuits (the function is not called). */
   andThen<U, F>(fn: (value: never) => Result<U, F>): Err<E>;
-  /** Runs `onErr` for `Err`. */
   match<A>(onOk: (value: never) => A, onErr: (error: E) => A): A;
 }
 
