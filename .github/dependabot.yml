@@ -8,6 +8,13 @@ updates:
     groups:
       dev-dependencies:
         dependency-type: development
+    ignore:
+      # typescript is held at 5.9 (tsup/rollup-plugin-dts .d.ts pipeline),
+      # @types/node tracks the Node 24 runtime; skip only major bumps.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
