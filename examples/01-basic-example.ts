@@ -1,6 +1,6 @@
-import { transform } from "../src/transform";
-import { Engine } from "json-rules-engine";
 import jsonLogic from "json-logic-js";
+import { Engine } from "json-rules-engine";
+import { registerCompatibilityHelpers, toJsonRule } from "../src/index";
 
 const facts = {
   name: "Harry Potter",
@@ -9,33 +9,30 @@ const facts = {
 
 const conditions = {
   all: [
-    {
-      fact: "name",
-      operator: "equal",
-      value: "Harry Potter",
-    },
-    {
-      fact: "currentSchoolYear",
-      operator: "greaterThanInclusive",
-      value: 5,
-    },
+    { fact: "name", operator: "equal", value: "Harry Potter" },
+    { fact: "currentSchoolYear", operator: "greaterThanInclusive", value: 5 },
   ],
 };
 
-// evaluate using json-rules-engine
+// Evaluate the condition with json-rules-engine.
 const engine = new Engine();
-engine.addRule({
-  conditions,
-  event: {
-    type: "isDifficult",
+engine.addRule({ conditions, event: { type: "isHarryInYear5OrAbove" } });
+const runResult = await engine.run(facts);
+const jsonRulesResult = runResult.results.length > 0;
+
+// Convert to json-logic. toJsonRule returns a Result — it never throws.
+// (Optional) register companion helpers so strict-mode rules can also be evaluated.
+registerCompatibilityHelpers(jsonLogic);
+
+const jsonLogicResult = toJsonRule(conditions, { strict: true }).match(
+  (rule) => Boolean(jsonLogic.apply(rule, facts)),
+  (error) => {
+    console.error(`conversion failed: ${error.message}`);
+    return false;
   },
-});
-const result = await engine.run(facts);
-const jsonRulesResult = result.results.length > 0;
+);
 
-// evaluate using json-logic
-const jsonLogicRule = transform(conditions);
-const jsonLogicResult = jsonLogic.apply(jsonLogicRule, facts);
-
-// assert both return the same result
-console.assert(jsonLogicResult === jsonRulesResult);
+// Both engines must agree.
+console.log(`json-rules-engine: ${jsonRulesResult}`);
+console.log(`json-logic:        ${jsonLogicResult}`);
+console.assert(jsonLogicResult === jsonRulesResult, "engines disagree!");

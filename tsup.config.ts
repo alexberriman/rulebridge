@@ -9,4 +9,7 @@ export default defineConfig({
   treeshake: true,
   target: "es2022",
   tsconfig: "tsconfig.build.json",
+  outExtension: ({ format }) => ({
+    js: format === "esm" ? ".mjs" : ".cjs",
+  }),
 });
