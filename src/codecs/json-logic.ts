@@ -106,7 +106,7 @@ function parseRule(
       if (typeof pathValue !== "string") {
         return fail('"var" requires a string path', path);
       }
-      // a default value (raw[1]) is intentionally dropped — see limitations.
+      // a default value (raw[1]) is intentionally dropped - see limitations.
       return ok(variable(pathValue));
     }
     case "missing":
@@ -136,7 +136,7 @@ function parseRule(
     case "in": {
       if (args.length !== 2) return fail('"in" takes two operands', path);
       // json-logic "in" is overloaded (array membership and substring). We map
-      // to array membership by default — the substring intent is not detectable
+      // to array membership by default - the substring intent is not detectable
       // statically (see README limitations).
       return parsePair(args, path).map(([needle, haystack]) =>
         inArray(needle, haystack),

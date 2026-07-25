@@ -1,6 +1,6 @@
 /**
  * A Rust-style `Result` type representing either success (`Ok`) or failure
- * (`Err`). All conversions return a `Result` instead of throwing — conversion
+ * (`Err`). All conversions return a `Result` instead of throwing - conversion
  * failures are structured data, never exceptions.
  *
  * Narrow with the `ok` discriminant, or use the combinator methods:

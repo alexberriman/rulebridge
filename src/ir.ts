@@ -74,7 +74,7 @@ export interface ArithmeticNode {
 }
 
 /**
- * The canonical intermediate representation — a serializable rule AST shared by
+ * The canonical intermediate representation - a serializable rule AST shared by
  * every codec. Codecs parse a source format INTO a `Rule` and emit a `Rule` OUT
  * to a target format, so conversion is N codecs rather than N² pairwise.
  */

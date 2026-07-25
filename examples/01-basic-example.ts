@@ -12,7 +12,7 @@ const condition = {
   ],
 };
 
-// Convert it to a json-logic rule. convert() returns a Result — it never throws.
+// Convert it to a json-logic rule. convert() returns a Result - it never throws.
 const result = convert("json-rules-engine", "json-logic", condition);
 
 if (result.ok) {

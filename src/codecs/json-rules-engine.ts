@@ -418,7 +418,7 @@ function emitCondition(
         return ok(emitLeaf(leftVar, rule.op, val.value));
       }
       if (rightVar !== undefined) {
-        // fact is on the right — mirror the comparison direction
+        // fact is on the right - mirror the comparison direction
         const val = emitValue(rule.left);
         if (!val.ok) return val;
         return ok(emitLeaf(rightVar, MIRROR[rule.op] ?? rule.op, val.value));

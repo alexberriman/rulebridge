@@ -17,7 +17,7 @@ const grammar: Grammar = {
 /**
  * `expr-eval` parses math/logic expressions into an AST. The library is
  * unmaintained and carries an unpatched RCE advisory (CVE-2025-12735) affecting
- * its own evaluator — rulebridge never invokes that evaluator; it only parses
+ * its own evaluator - rulebridge never invokes that evaluator; it only parses
  * the documented grammar. Function calls and array quantifiers are unsupported.
  */
 export const exprEvalCodec: Codec = {

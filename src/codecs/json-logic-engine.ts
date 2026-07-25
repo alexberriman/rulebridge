@@ -6,7 +6,7 @@ import { jsonLogicCodec } from "./json-logic";
  * of `json-logic-js`. It evaluates the **same json-logic rule format**, so the
  * standard rule set is handled by the json-logic codec. Engine-specific extras
  * (`val`, `??`, `exists`, `get`, two-scope `map`) are not part of the shared IR
- * and return a structured `Err` — see the README limitations.
+ * and return a structured `Err` - see the README limitations.
  */
 export const jsonLogicEngineCodec: Codec = {
   id: "json-logic-engine",
