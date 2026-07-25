@@ -215,8 +215,19 @@ function resolveValue(
   operator: Operator,
   path: string,
 ): Result<JsonLogicValue, ConversionError> {
-  // fact-reference value -> { var: ... } (this IS convertible)
+  // fact-reference value -> { var: ... } (convertible for most operators)
   if (isFactReferenceValue(value)) {
+    // contains/doesNotContain cannot take a fact-reference value: their json-logic
+    // translation uses some/none, which rebind {var} to each *element* of the
+    // array, so a referenced root fact would resolve against the element instead
+    // of the root data and produce a wrong result. Reject rather than emit garbage.
+    if (operator === "contains" || operator === "doesNotContain") {
+      return err({
+        code: "unsupported_value",
+        message: `the ${JSON.stringify(operator)} operator cannot compare against a fact-reference value: json-logic's some/none rebind the variable scope to each element, so the referenced fact would resolve against the element rather than the root data`,
+        path,
+      });
+    }
     if (value.params !== undefined && Object.keys(value.params).length > 0) {
       return err({
         code: "dynamic_params",

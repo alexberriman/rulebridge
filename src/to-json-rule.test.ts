@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { convert, convertError, crossValidate } from "./_testkit";
+import { convert, convertError, crossValidate, jsonLogic } from "./_testkit";
 import { toJsonRule } from "./index";
 
 /** Structural: exact emitted json-logic shape for each operator (default mode). */
@@ -362,6 +362,24 @@ describe("toJsonRule — structured errors", () => {
     );
   });
 
+  test("contains with a fact-reference value is rejected (some/none rebinds var scope)", () => {
+    convertError(
+      { all: [{ fact: "tags", operator: "contains", value: { fact: "t" } }] },
+      "unsupported_value",
+    );
+  });
+
+  test("doesNotContain with a fact-reference value is rejected", () => {
+    convertError(
+      {
+        all: [
+          { fact: "tags", operator: "doesNotContain", value: { fact: "t" } },
+        ],
+      },
+      "unsupported_value",
+    );
+  });
+
   test("decorator (colon-composite) operator", () => {
     convertError(
       { all: [{ fact: "x", operator: "not:in", value: [1] }] },
@@ -521,5 +539,42 @@ describe("toJsonRule — strict mode", () => {
     );
     expect(jsonRulesEngine).toBe(false);
     expect(jsonLogic).toBe(false);
+  });
+});
+
+/**
+ * Documented behavioural differences — these pin the divergences that are
+ * intentional in default (non-strict) mode, so a future change cannot make them
+ * drift silently. See the README "Known behavioural differences" section.
+ */
+describe("toJsonRule — documented behavioural differences (non-strict)", () => {
+  test("numeric operator on a non-numeric fact diverges (JRE false, json-logic true)", async () => {
+    const { jsonLogic, jsonRulesEngine } = await crossValidate(
+      { all: [{ fact: "n", operator: "lessThan", value: 10 }] },
+      { n: null },
+    );
+    expect(jsonRulesEngine).toBe(false);
+    expect(jsonLogic).toBe(true); // documented divergence; use strict mode to fix
+  });
+
+  test("doesNotContain on a non-array fact diverges (JRE false, json-logic true)", async () => {
+    const { jsonLogic, jsonRulesEngine } = await crossValidate(
+      { all: [{ fact: "word", operator: "doesNotContain", value: "z" }] },
+      { word: "hello" },
+    );
+    expect(jsonRulesEngine).toBe(false);
+    expect(jsonLogic).toBe(true); // documented divergence; use strict mode to fix
+  });
+
+  test("a missing fact converts fine; json-logic resolves it to null (json-rules-engine would throw)", () => {
+    const result = toJsonRule({
+      all: [{ fact: "missing", operator: "equal", value: 1 }],
+    });
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      // { var: "missing" } -> null; null === 1 -> false. json-rules-engine throws
+      // UndefinedFactError for a missing fact by default — ensure all facts are present.
+      expect(jsonLogic.apply(result.value, {})).toBe(false);
+    }
   });
 });
