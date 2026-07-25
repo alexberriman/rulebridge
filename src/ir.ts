@@ -3,11 +3,13 @@ import { err, ok, type Result } from "./result";
 
 /** A JSON primitive value. */
 export type Primitive = string | number | boolean | null;
+/** A literal value: a primitive or a flat array of primitives. */
+export type LiteralValue = Primitive | readonly Primitive[];
 
 /** A literal value node. */
 export interface LiteralNode {
   readonly type: "literal";
-  readonly value: Primitive;
+  readonly value: LiteralValue;
 }
 /** Variable / data access. `path` is dot-notation (`""` = whole data). */
 export interface VarNode {
@@ -90,7 +92,7 @@ export type Rule =
 
 // ---- constructors -----------------------------------------------------------
 
-export const literal = (value: Primitive): LiteralNode => ({
+export const literal = (value: LiteralValue): LiteralNode => ({
   type: "literal",
   value,
 });

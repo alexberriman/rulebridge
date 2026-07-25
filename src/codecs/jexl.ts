@@ -9,8 +9,9 @@ import { err } from "../result";
 
 const grammar: Grammar = {
   id: "jexl",
-  strictEquality: true,
+  strictEquality: false,
   logicalWords: false,
+  arrayLiterals: true,
 };
 
 /**

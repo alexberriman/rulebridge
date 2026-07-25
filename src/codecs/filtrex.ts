@@ -10,7 +10,8 @@ import { err } from "../result";
 const grammar: Grammar = {
   id: "filtrex",
   strictEquality: false,
-  logicalWords: false,
+  logicalWords: true,
+  arrayLiterals: false,
 };
 
 /**

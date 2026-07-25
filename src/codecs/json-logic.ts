@@ -9,6 +9,7 @@ import {
   literal,
   not,
   or,
+  type Primitive,
   quantifier,
   type Rule,
   variable,
@@ -67,11 +68,16 @@ function parseRule(
     return ok(literal(input as string | number | boolean | null));
   }
   if (Array.isArray(input)) {
-    // json-logic treats a bare array as data; the IR has no array literal.
-    return fail(
-      "bare arrays are data in json-logic and have no rule equivalent",
-      path,
-    );
+    // A flat array of primitives is a literal; arrays containing nested rules
+    // (json-logic maps apply over elements) are not representable.
+    if (
+      input.every(
+        (e) => e === null || ["string", "number", "boolean"].includes(typeof e),
+      )
+    ) {
+      return ok(literal(input as Primitive[]));
+    }
+    return fail("arrays containing nested rules are not convertible", path);
   }
   if (typeof input !== "object") {
     return fail(`unrecognized json-logic node at ${path}`);

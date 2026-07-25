@@ -11,6 +11,7 @@ const grammar: Grammar = {
   id: "expression-eval",
   strictEquality: true,
   logicalWords: false,
+  arrayLiterals: true,
 };
 
 /**

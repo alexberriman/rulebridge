@@ -11,6 +11,7 @@ const grammar: Grammar = {
   id: "casbin",
   strictEquality: false,
   logicalWords: false,
+  arrayLiterals: false,
 };
 
 /**

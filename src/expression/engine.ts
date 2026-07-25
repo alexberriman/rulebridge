@@ -21,6 +21,8 @@ export interface Grammar {
   readonly strictEquality: boolean;
   /** Use `and`/`or`/`not` words (true) or `&&`/`||`/`!` symbols (false). */
   readonly logicalWords: boolean;
+  /** Whether the format supports array literals like `[1, 2, 3]`. */
+  readonly arrayLiterals: boolean;
 }
 
 const UNSUPPORTED_EMIT = new Set<string>(["some", "all", "none"]);
@@ -476,6 +478,7 @@ function nodePrec(rule: Rule): number {
 function emitLiteral(value: unknown): string {
   if (typeof value === "string") return JSON.stringify(value);
   if (value === null) return "null";
+  if (Array.isArray(value)) return `[${value.map(emitLiteral).join(", ")}]`;
   return String(value);
 }
 
@@ -561,6 +564,47 @@ function wrap(rule: Rule, parentPrec: number, grammar: Grammar): string {
   return nodePrec(rule) < parentPrec ? `(${text})` : text;
 }
 
+function containsArrayLiteral(rule: Rule): boolean {
+  if (rule.type === "literal") return Array.isArray(rule.value);
+  switch (rule.type) {
+    case "and":
+    case "or":
+      return rule.values.some(containsArrayLiteral);
+    case "not":
+      return containsArrayLiteral(rule.value);
+    case "compare":
+      return (
+        containsArrayLiteral(rule.left) || containsArrayLiteral(rule.right)
+      );
+    case "if":
+      return (
+        rule.branches.some(
+          (b) =>
+            containsArrayLiteral(b.condition) || containsArrayLiteral(b.value),
+        ) || containsArrayLiteral(rule.otherwise)
+      );
+    case "add":
+    case "subtract":
+    case "multiply":
+    case "divide":
+    case "mod":
+      return rule.values.some(containsArrayLiteral);
+    case "inArray":
+    case "inString":
+      return (
+        containsArrayLiteral(rule.needle) || containsArrayLiteral(rule.haystack)
+      );
+    case "some":
+    case "all":
+    case "none":
+      return (
+        containsArrayLiteral(rule.array) || containsArrayLiteral(rule.test)
+      );
+    default:
+      return false;
+  }
+}
+
 /** Emit an IR rule as an expression string in the given grammar. */
 export function emitExpression(
   rule: Rule,
@@ -571,6 +615,17 @@ export function emitExpression(
       conversionError(
         "unsupported_construct",
         `${grammar.id} cannot express array quantifiers (some/all/none); expression formats have no equivalent`,
+        {
+          format: grammar.id,
+        },
+      ),
+    );
+  }
+  if (!grammar.arrayLiterals && containsArrayLiteral(rule)) {
+    return err(
+      conversionError(
+        "unsupported_construct",
+        `${grammar.id} does not support array literals`,
         {
           format: grammar.id,
         },
