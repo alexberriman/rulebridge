@@ -106,11 +106,7 @@ function convertAll(
     return ok(true);
   }
   const rules: JsonLogicRule[] = [];
-  for (let index = 0; index < input.all.length; index += 1) {
-    const childCondition = input.all[index];
-    if (childCondition === undefined) {
-      continue;
-    }
+  for (const [index, childCondition] of input.all.entries()) {
     const child = convert(childCondition, options, `${path}.all[${index}]`);
     if (!child.ok) {
       return child;
@@ -129,11 +125,7 @@ function convertAny(
     return ok(true);
   }
   const rules: JsonLogicRule[] = [];
-  for (let index = 0; index < input.any.length; index += 1) {
-    const childCondition = input.any[index];
-    if (childCondition === undefined) {
-      continue;
-    }
+  for (const [index, childCondition] of input.any.entries()) {
     const child = convert(childCondition, options, `${path}.any[${index}]`);
     if (!child.ok) {
       return child;
@@ -403,11 +395,5 @@ function isFactReferenceValue(value: unknown): value is FactReferenceValue {
 }
 
 function describeType(value: unknown): string {
-  if (value === null) {
-    return "null";
-  }
-  if (Array.isArray(value)) {
-    return "array";
-  }
-  return typeof value;
+  return value === null ? "null" : typeof value;
 }

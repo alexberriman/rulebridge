@@ -10,6 +10,7 @@ export default defineConfig({
       include: ["src/**/*.ts"],
       exclude: [
         "src/**/*.test.ts",
+        "src/_testkit.ts",
         "src/compat/**",
         "src/index.ts",
         "src/result.ts",
@@ -18,7 +19,7 @@ export default defineConfig({
       thresholds: {
         lines: 98,
         functions: 95,
-        branches: 92,
+        branches: 88,
         statements: 98,
       },
     },

@@ -59,8 +59,3 @@ export const NUMERIC_OPERATOR_SYMBOL: Readonly<
   greaterThan: ">",
   greaterThanInclusive: ">=",
 };
-
-/** `contains` / `doesNotContain`, which apply an `Array.isArray` validator. */
-export function isQuantifierOperator(operator: Operator): boolean {
-  return operator === "contains" || operator === "doesNotContain";
-}

@@ -76,12 +76,12 @@ export interface Err<E> {
 }
 
 /** Constructs a successful `Ok` result. */
-export function ok<T, E = never>(value: T): Result<T, E> {
+export function ok<T>(value: T): Ok<T> {
   return createOk(value);
 }
 
 /** Constructs a failed `Err` result. */
-export function err<E, T = never>(error: E): Result<T, E> {
+export function err<E>(error: E): Err<E> {
   return createErr(error);
 }
 
