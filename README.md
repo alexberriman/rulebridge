@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://github.com/alexberriman/json-rules-engine-to-json-logic"><img src="https://raw.githubusercontent.com/alexberriman/json-rules-engine-to-json-logic/main/logo.svg" alt="rulebridge" width="200"></a>
+  <a href="https://github.com/alexberriman/rulebridge"><img src="https://raw.githubusercontent.com/alexberriman/rulebridge/main/logo.svg" alt="rulebridge" width="200"></a>
   <br><br>
   rulebridge
   <br>
@@ -10,8 +10,8 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/rulebridge"><img src="https://img.shields.io/npm/v/rulebridge?color=6366f1&label=npm" alt="npm version"></a>
-  <a href="https://github.com/alexberriman/json-rules-engine-to-json-logic/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/alexberriman/json-rules-engine-to-json-logic/ci.yml?branch=main&label=ci" alt="CI"></a>
-  <a href="https://codecov.io/gh/alexberriman/json-rules-engine-to-json-logic"><img src="https://img.shields.io/codecov/c/github/alexberriman/json-rules-engine-to-json-logic?color=6366f1" alt="coverage"></a>
+  <a href="https://github.com/alexberriman/rulebridge/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/alexberriman/rulebridge/ci.yml?branch=main&label=ci" alt="CI"></a>
+  <a href="https://codecov.io/gh/alexberriman/rulebridge"><img src="https://img.shields.io/codecov/c/github/alexberriman/rulebridge?color=6366f1" alt="coverage"></a>
   <a href="https://www.npmjs.com/package/rulebridge"><img src="https://img.shields.io/bundlephobia/minzip/rulebridge?color=6366f1" alt="minzipped size"></a>
   <a href="https://www.npmjs.com/package/rulebridge"><img src="https://img.shields.io/npm/types/rulebridge?color=6366f1" alt="types"></a>
   <a href="https://www.npmjs.com/package/rulebridge"><img src="https://img.shields.io/npm/l/rulebridge?color=6366f1" alt="license"></a>

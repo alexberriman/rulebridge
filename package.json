@@ -47,7 +47,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alexberriman/json-rules-engine-to-json-logic.git"
+    "url": "git+https://github.com/alexberriman/rulebridge.git"
   },
   "keywords": [
     "rules",
@@ -69,9 +69,9 @@
   "author": "Alex Berriman <alexb@bezz.com.au>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/alexberriman/json-rules-engine-to-json-logic/issues"
+    "url": "https://github.com/alexberriman/rulebridge/issues"
   },
-  "homepage": "https://github.com/alexberriman/json-rules-engine-to-json-logic",
+  "homepage": "https://github.com/alexberriman/rulebridge",
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
     "@biomejs/biome": "^2.5.5",
