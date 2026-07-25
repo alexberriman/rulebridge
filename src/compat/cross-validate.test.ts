@@ -77,7 +77,8 @@ const cases: Array<[string, Condition, Record<string, unknown>]> = [
     },
     { a: 1, b: 9, c: 5 },
   ],
-  ["not", { not: { fact: "n", operator: "equal", value: 1 } }, { n: 2 }],
+  // Note: top-level `not` requires json-rules-engine >= 6.2.0, so it is tested
+  // in the main suite only — not in this version-agnostic matrix suite.
   [
     "path",
     {
