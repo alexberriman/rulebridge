@@ -38,7 +38,6 @@
     "format:check": "biome format .",
     "typecheck": "tsc --noEmit",
     "ci": "npm run lint && npm run typecheck && npm run test:coverage && npm run build",
-    "compat-matrix": "node scripts/compat-matrix.mjs",
     "changeset": "changeset",
     "release": "npm run build && changeset publish",
     "prepare": "husky"

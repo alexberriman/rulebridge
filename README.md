@@ -1,295 +1,167 @@
 <h1 align="center">
   <br>
-  <a href="https://github.com/alexberriman/json-rules-engine-to-json-logic"><img src="https://raw.githubusercontent.com/alexberriman/json-rules-engine-to-json-logic/main/logo.svg" alt="json-rules-engine-to-json-logic" width="200"></a>
+  <a href="https://github.com/alexberriman/json-rules-engine-to-json-logic"><img src="https://raw.githubusercontent.com/alexberriman/json-rules-engine-to-json-logic/main/logo.svg" alt="rulebridge" width="200"></a>
   <br><br>
-  json-rules-engine-to-json-logic
+  rulebridge
   <br>
 </h1>
 
-<h4 align="center">Convert <a href="https://github.com/CacheControl/json-rules-engine">json-rules-engine</a> conditions into <a href="https://github.com/jwadhams/json-logic-js">JsonLogic</a> rules. Zero dependencies, full operator coverage, and a Rust-style <code>Result</code> API — no throws, no error classes.</h4>
+<h4 align="center">One rule, every engine. Convert rules between <a href="https://github.com/CacheControl/json-rules-engine">json-rules-engine</a>, <a href="https://github.com/jwadhams/json-logic-js">JsonLogic</a>, <a href="https://github.com/TotalTecher/json-logic-engine">json-logic-engine</a>, <a href="https://github.com/joewalnes/filtrex">filtrex</a>, <a href="https://github.com/TomFrost/jexl">jexl</a>, <a href="https://github.com/silentmatt/expr-eval">expr-eval</a>, <a href="https://github.com/donmccurdy/expression-eval">expression-eval</a> and <a href="https://github.com/casbin/node-casbin">Casbin</a> matchers.</h4>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/json-rules-engine-to-json-logic"><img src="https://img.shields.io/npm/v/json-rules-engine-to-json-logic?color=6366f1&label=npm" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/rulebridge"><img src="https://img.shields.io/npm/v/rulebridge?color=6366f1&label=npm" alt="npm version"></a>
   <a href="https://github.com/alexberriman/json-rules-engine-to-json-logic/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/alexberriman/json-rules-engine-to-json-logic/ci.yml?branch=main&label=ci" alt="CI"></a>
   <a href="https://codecov.io/gh/alexberriman/json-rules-engine-to-json-logic"><img src="https://img.shields.io/codecov/c/github/alexberriman/json-rules-engine-to-json-logic?color=6366f1" alt="coverage"></a>
-  <a href="https://www.npmjs.com/package/json-rules-engine-to-json-logic"><img src="https://img.shields.io/bundlephobia/minzip/json-rules-engine-to-json-logic?color=6366f1" alt="minzipped size"></a>
-  <a href="https://www.npmjs.com/package/json-rules-engine-to-json-logic"><img src="https://img.shields.io/npm/types/json-rules-engine-to-json-logic?color=6366f1" alt="types"></a>
-  <a href="https://www.npmjs.com/package/json-rules-engine-to-json-logic"><img src="https://img.shields.io/npm/l/json-rules-engine-to-json-logic?color=6366f1" alt="license"></a>
-  <a href="https://www.npmjs.com/package/json-rules-engine-to-json-logic"><img src="https://img.shields.io/node/v/json-rules-engine-to-json-logic?color=6366f1" alt="node"></a>
+  <a href="https://www.npmjs.com/package/rulebridge"><img src="https://img.shields.io/bundlephobia/minzip/rulebridge?color=6366f1" alt="minzipped size"></a>
+  <a href="https://www.npmjs.com/package/rulebridge"><img src="https://img.shields.io/npm/types/rulebridge?color=6366f1" alt="types"></a>
+  <a href="https://www.npmjs.com/package/rulebridge"><img src="https://img.shields.io/npm/l/rulebridge?color=6366f1" alt="license"></a>
 </p>
 
 <p align="center">
   <a href="#why">Why</a> •
-  <a href="#features">Features</a> •
   <a href="#install">Install</a> •
   <a href="#quick-start">Quick start</a> •
-  <a href="#the-result-type">Result API</a> •
-  <a href="#operator-mapping">Operators</a> •
-  <a href="#compatibility">Compatibility</a> •
-  <a href="#migrating-from-0x">Migration</a>
+  <a href="#supported-formats">Formats</a> •
+  <a href="#api">API</a> •
+  <a href="#fidelity--limitations">Fidelity &amp; limitations</a>
 </p>
 
 ---
 
 ## Why
 
-Rule engines let you express complex logic as JSON and evaluate it securely (no `eval`) — ideal for persisting user-defined rules and evaluating them on the frontend **and** backend. There are several popular engines; [`json-rules-engine`](https://github.com/CacheControl/json-rules-engine) and [`json-logic-js`](https://github.com/jwadhams/json-logic-js) are two of the most common.
+There are several popular, serializable rule formats in the JS ecosystem — and they don't interoperate. A condition authored for `json-rules-engine` can't be fed to a service that speaks JsonLogic; a `filtrex` filter expression can't be persisted next to a `jexl` policy. You end up picking one engine and being locked in.
 
-Because tools and integrations often standardize on one format, being locked into a single engine is costly. **`json-rules-engine-to-json-logic`** bridges the two: convert a `json-rules-engine` condition into a `json-logic` rule, and you can feed it to any library, service, or database that speaks JsonLogic — without adopting it across your whole application.
+**rulebridge** is a portability layer: it converts a rule from any supported format into any other, through a single canonical intermediate representation. Need to migrate off a rules engine? Feed rules built for one library into another? Store rules in a neutral shape? rulebridge does the translation — and tells you, precisely and structurally, when something can't be translated.
 
 ## Features
 
-- **🦀 Rust-style `Result` API** — conversions return `Result<JsonLogicRule, ConversionError>` instead of throwing. Errors are structured data, not exception classes.
-- **🪶 Zero dependencies** — no runtime dependencies *and* no type-only dependencies. The published types reference nothing external.
-- **✅ Full operator coverage** — all 10 built-in operators, plus top-level and nested `not`, `all`/`any` nesting, `path` resolution, and fact-to-fact comparisons.
-- **🛡️ Fail-fast, structured errors** — everything that *can't* be converted (custom operators, dynamic facts, unsupported paths) is reported with a typed `code` and a path to the offending node — never silently produces a wrong rule.
-- **🔬 Strict mode** — opt in to exact runtime fidelity that replicates `json-rules-engine`'s numeric and array validators.
-- **🧪 Tested to the hilt** — cross-validation against both engines, property-based fuzzing, and a multi-version compatibility matrix.
-- **📦 Modern build** — dual ESM/CJS, `.d.ts`, npm provenance, ~1&nbsp;KB minified + gzipped.
+- **🔀 Any-to-any** — convert between 8 popular formats through one canonical IR (N codecs, not N² pairwise converters).
+- **🦀 Rust-style `Result` API** — conversions return `Result<unknown, ConversionError>` instead of throwing. Errors are structured data (`code`, `message`, `path`, `format`), never exceptions.
+- **🪶 Zero runtime dependencies** — and zero type-only dependencies. The published types reference nothing external.
+- **🛡️ Honest about loss** — every format has a different expressiveness. rulebridge never silently produces a wrong rule: untranslatable constructs return a typed `Err`, and the [fidelity tiers](#fidelity--limitations) are documented up front.
+- **🧪 Tested** — cross-format equivalence is verified by converting rules and evaluating them in each format's *native* engine.
+- **📦 Modern build** — dual ESM/CJS, `.d.ts`, ~3 KB minified + gzipped.
 
 ## Install
 
 ```bash
-npm install json-rules-engine-to-json-logic
+npm install rulebridge
 ```
 
 ## Quick start
 
 ```ts
+import jsonLogic from "json-logic-js";
 import { Engine } from "json-rules-engine";
-import jsonLogic from "json-logic-js";
-import { toJsonRule } from "json-rules-engine-to-json-logic";
+import { convert } from "rulebridge";
 
-const facts = { age: 17, house: "gryffindor" };
-
-const condition = {
-  all: [
-    { fact: "age", operator: "greaterThanInclusive", value: 17 },
-    { fact: "house", operator: "equal", value: "gryffindor" },
-  ],
-};
-
-// toJsonRule returns a Result — it never throws.
-const result = toJsonRule(condition);
-
-if (result.ok) {
-  // result.value is a plain JsonLogic rule:
-  // { and: [{ ">=": [{ var: "age" }, 17] }, { "===": [{ var: "house" }, "gryffindor" }] }] }
-
-  // Evaluate it with json-logic…
-  const jsonLogicResult = jsonLogic.apply(result.value, facts);
-
-  // …and it agrees with json-rules-engine:
-  const engine = new Engine();
-  engine.addRule({ conditions: condition, event: { type: "admit" } });
-  const jsonRulesResult = (await engine.run(facts)).results.length > 0;
-
-  console.log(jsonLogicResult === jsonRulesResult); // true
-} else {
-  // result.error is structured data: { code, message, path }
-  console.error(`${result.error.code}: ${result.error.message}`);
-}
-```
-
-## The `Result` type
-
-`toJsonRule` returns a [`Result`](https://doc.rust-lang.org/std/result/) — a tagged `Ok` or `Err`. Narrow with the `ok` field, or use the combinator methods:
-
-```ts
-const result = toJsonRule(condition);
-
-// 1. discriminant narrowing
-if (result.ok) {
-  use(result.value); // JsonLogicRule
-} else {
-  log(result.error); // ConversionError
-}
-
-// 2. pattern-match
-const rule = result.match(
-  (rule) => rule,            // Ok  -> JsonLogicRule
-  (error) => fallback(error) // Err -> your value
-);
-
-// 3. map / mapErr / andThen chain over the value
-const negated = result.map((rule) => ({ "!": [rule] }));
-
-// 4. opt-in unwrap (throws on Err, like Rust's `.unwrap()`)
-const rule = result.unwrap();
-```
-
-| Method | `Ok<T>` | `Err<E>` |
-| --- | --- | --- |
-| `isOk()` / `isErr()` | `true` / `false` | `false` / `true` |
-| `unwrap()` | returns `T` | **throws** |
-| `unwrapOr(d)` | returns `T` | returns `d` |
-| `unwrapOrElse(fn)` | returns `T` | returns `fn(error)` |
-| `map(fn)` | `Ok<fn(value)>` | passes through |
-| `mapErr(fn)` | passes through | `Err<fn(error)>` |
-| `andThen(fn)` | `fn(value)` | passes through |
-| `match(onOk, onErr)` | `onOk(value)` | `onErr(error)` |
-
-> `.unwrap()` is the only operation that throws, and only when *you* call it on an `Err`. The library itself never throws.
-
-## API
-
-### `toJsonRule(condition, options?)`
-
-Converts a `json-rules-engine` condition into a `JsonLogic` rule.
-
-```ts
-function toJsonRule(
-  condition: JsonRulesEngineCondition,
-  options?: { strict?: boolean },
-): Result<JsonLogicRule, ConversionError>;
-```
-
-| Option | Type | Default | Description |
-| --- | --- | --- | --- |
-| `strict` | `boolean` | `false` | Emit guarded rules that replicate `json-rules-engine`'s numeric and array validators exactly. Requires the companion operations to be registered (see below). |
-
-The input type is **structurally compatible** with `json-rules-engine`'s `TopLevelCondition` — pass a real condition object directly, no adapter needed.
-
-### `registerCompatibilityHelpers(jsonLogic)`
-
-Registers the `isFiniteNumber` and `isArray` companion operations on a `json-logic` instance, so that `strict`-mode output evaluates correctly. Call it once per instance:
-
-```ts
-import jsonLogic from "json-logic-js";
-import { registerCompatibilityHelpers } from "json-rules-engine-to-json-logic";
-
-registerCompatibilityHelpers(jsonLogic);
-
-// Now strict-mode rules can be evaluated:
-const rule = toJsonRule(condition, { strict: true }).unwrap();
-jsonLogic.apply(rule, facts);
-```
-
-### `jsonPathToDotNotation(path)`
-
-Lower-level helper that converts a JSONPath expression (as used by `path`) into the dot-notation consumed by `json-logic`'s `var`. Returns `Result<string, ConversionError>`.
-
-### Types
-
-`toJsonRule`, `ok`, `err`, `registerCompatibilityHelpers`, `isFiniteNumber`, `isArray`, and the types `Result`, `Ok`, `Err`, `ConversionError`, `ConversionErrorCode`, `JsonRulesEngineCondition`, `JsonLogicRule`, `ToJsonRuleOptions`, `JsonLogicLike` are all exported from the package entry.
-
-## Operator mapping
-
-Every convertible `json-rules-engine` construct maps to stock `json-logic`:
-
-| json-rules-engine | json-logic |
-| --- | --- |
-| `all: [...]` | `{ and: [...] }` |
-| `any: [...]` | `{ or: [...] }` |
-| `not: {...}` | `{ "!": [...] }` |
-| `equal` | `===` |
-| `notEqual` | `!==` |
-| `lessThan` | `<` |
-| `lessThanInclusive` | `<=` |
-| `greaterThan` | `>` |
-| `greaterThanInclusive` | `>=` |
-| `in` | `in` |
-| `notIn` | `{ "!": { in: [...] } }` |
-| `contains` | `some` |
-| `doesNotContain` | `none` |
-| `path: "$.a.b"` | folded into `{ var: "fact.a.b" }` |
-| `value: { fact: "x" }` | `{ var: "x" }` (fact-to-fact comparison) |
-| empty `all`/`any` | `true` (vacuous truth) |
-
-## Compatibility
-
-### What converts cleanly
-
-All 10 built-in operators, nested `all`/`any`, top-level and nested `not`, JSONPath dot/bracket/numeric/quoted (RFC 9535) and unicode forms, and fact-reference values — all verified to produce identical results to `json-rules-engine` across the supported version range.
-
-### What returns an `Err`
-
-A conversion is *impossible* (and reported with a precise error) rather than silently wrong, when the condition uses:
-
-| `code` | Reason |
-| --- | --- |
-| `unsupported_operator` | A custom operator or a decorator composite like `not:in` / `everyFact:*`. |
-| `unsupported_value` | A non-primitive value, or a value of the wrong type for the operator (e.g. a non-array for `in`). |
-| `unsupported_path` | A JSONPath feature `var` can't address: filters (`?`), wildcards (`*`), recursive descent (`..`), slices (`:`), negative indices, keys containing a dot, or a rootless path. |
-| `dynamic_params` | A dynamic fact (`params`) that requires runtime evaluation. |
-| `named_condition_reference` | A `{ condition: "name" }` reference that needs the engine's registry. |
-| `unrecognized_condition` | A shape the converter doesn't recognise, or a leaf missing a `fact`. |
-
-Each error includes a `path` (e.g. `$.all[2].not`) pointing at the offending node.
-
-### Known behavioural differences (use `strict` mode)
-
-For two cases, stock `json-logic` can't express `json-rules-engine`'s runtime validators, so the default (`strict: false`) output **diverges only when a fact has the wrong type** — never for well-typed facts:
-
-- **Numeric operators** (`<`, `<=`, `>`, `>=`): `json-rules-engine` treats a non-numeric fact as `false`; `json-logic` coerces (e.g. `null < 10` → `true`).
-- **`doesNotContain`** on a non-array fact: `json-rules-engine` returns `false`; `json-logic`'s `none` returns `true`.
-
-Pass `{ strict: true }` and call `registerCompatibilityHelpers(jsonLogic)` to replicate the validators exactly. The output then references two companion operations, so it is intended for in-process evaluation rather than cross-system portability.
-
-## Multi-version support
-
-The converter is verified against a matrix of both libraries via an install-matrix script (`npm run compat-matrix`), run in CI:
-
-| | json-logic-js `2.0.2` | json-logic-js `2.0.5` |
-| --- | :---: | :---: |
-| **json-rules-engine `6.1.2`** | ✅ | ✅ |
-| **json-rules-engine `6.6.0`** | ✅ | ✅ |
-| **json-rules-engine `7.0.0`** | ✅ | ✅ |
-| **json-rules-engine `7.3.1`** | ✅ | ✅ |
-
-> Top-level `not` requires `json-rules-engine >= 6.2.0` (it didn't exist in 6.1.x).
-
-## Migrating from 0.x
-
-1.0.0 is a redesign. Breaking changes:
-
-- **`toJsonRule()` now returns a `Result`** instead of throwing. Handle errors as data:
-  ```ts
-  // before
-  try {
-    const rule = toJsonRule(condition);
-  } catch (e) { /* CompatibilityError */ }
-
-  // after
-  const result = toJsonRule(condition);
-  if (!result.ok) {
-    console.error(result.error.message); // ConversionError
-  }
-  ```
-- **`CompatibilityError` (thrown `Error` subclass) is removed.** Failures are now the `ConversionError` value inside an `Err`.
-- **`json-rules-engine` / `json-logic-js` are no longer install-time dependencies.** The package is now fully zero-dependency (runtime *and* types).
-- **Minimum Node.js is `20.19.0`**, and the package ships dual ESM/CJS.
-
-On the upside, 1.0 adds `not`, nested conditions, fact-reference values, fail-fast errors for everything unconvertible, `strict` mode, and the multi-version matrix.
-
-## Examples
-
-A runnable example lives in [`examples/01-basic-example.ts`](./examples/01-basic-example.ts):
-
-```ts
-import { Engine } from "json-rules-engine";
-import jsonLogic from "json-logic-js";
-import { registerCompatibilityHelpers, toJsonRule } from "json-rules-engine-to-json-logic";
-
-registerCompatibilityHelpers(jsonLogic);
-
+// A json-rules-engine condition.
 const condition = {
   all: [
     { fact: "name", operator: "equal", value: "Harry Potter" },
-    { fact: "currentSchoolYear", operator: "greaterThanInclusive", value: 5 },
+    { fact: "age", operator: "greaterThanInclusive", value: 17 },
   ],
 };
 
-const agrees = toJsonRule(condition, { strict: true }).match(
-  (rule) => Boolean(jsonLogic.apply(rule, facts)) === jsonRulesResult,
-  (error) => { console.error(error.message); return false; },
+// Convert it to a json-logic rule. convert() returns a Result — it never throws.
+const result = convert("json-rules-engine", "json-logic", condition);
+
+if (result.ok) {
+  // result.value === { and: [{ "===": [{ var: "name" }, "Harry Potter"] }, { ">=": [{ var: "age" }, 17] }] }
+  jsonLogic.apply(result.value, { name: "Harry Potter", age: 17 }); // => true
+}
+
+// ...or straight into an expression string:
+convert("json-rules-engine", "filtrex", condition);
+// => Ok('name == "Harry Potter" and age >= 17')
+
+convert("json-rules-engine", "jexl", condition);
+// => Ok('name == "Harry Potter" && age >= 17')
+```
+
+Handle errors as data:
+
+```ts
+const result = convert("json-rules-engine", "filtrex", {
+  all: [{ fact: "tags", operator: "contains", value: "x" }],
+});
+
+if (!result.ok) {
+  // result.error === { code: "unsupported_construct", message: "...", format: "filtrex" }
+  console.error(`${result.error.format}: ${result.error.message}`);
+}
+```
+
+## Supported formats
+
+| Format | Direction | Fidelity |
+| --- | --- | --- |
+| **json-logic-js** (`json-logic`) | parse + emit | 🟢 lossless |
+| **json-logic-engine** (`json-logic-engine`) | parse + emit | 🟢 lossless (same rule shape) |
+| **json-rules-engine** (`json-rules-engine`) | parse + emit | 🟢 lossless predicate layer |
+| **jexl** (`jexl`) | parse + emit | 🟡 expression subset |
+| **expression-eval** (`expression-eval`) | parse + emit | 🟡 expression subset |
+| **filtrex** (`filtrex`) | parse + emit | 🟡 expression subset (word logicals, no array literals) |
+| **expr-eval** (`expr-eval`) | parse + emit | 🟡 expression subset |
+| **Casbin** (`casbin`) | matcher only | 🟠 matcher-expression fragment |
+
+## API
+
+### `convert(from, to, input)`
+
+Convert a rule from one format to another, via the canonical IR. Returns `Result<unknown, ConversionError>`.
+
+```ts
+convert("json-logic", "filtrex", { "==": [{ var: "n" }, 1] });
+// => Ok('n == 1')
+```
+
+### `parse(format, input)` / `emit(format, rule)`
+
+Parse a source-format rule into the canonical IR, or emit an IR rule into a format. Each is half of `convert`, useful when you want to author or inspect the IR directly.
+
+```ts
+const rule = parse("json-logic", { "==": [{ var: "x" }, 1] });
+// rule === { type: "compare", op: "equal", strict: false, left: { type: "var", path: "x" }, right: { type: "literal", value: 1 } }
+
+emit("jexl", rule);
+// => Ok('x == 1')
+```
+
+### The canonical IR
+
+The IR is a serializable, discriminated-union rule AST. It models boolean combiners (`and`/`or`/`not`), comparisons with an explicit **strict** flag (`===` vs `==`), distinct **array-membership** vs **substring** `in`, array quantifiers (`some`/`all`/`none`), lazy conditionals (`if`), arithmetic, variable access and literals. Constructors (`literal`, `variable`, `and`, `or`, `not`, `compare`, `inArray`, `inString`, `quantifier`, `ifRule`, `arithmetic`) and a reference `evaluate(rule, data)` are all exported, so you can build and evaluate IR rules without any upstream engine.
+
+### The `Result` type
+
+`convert`, `parse` and `emit` return a `Result<T, ConversionError>`. Narrow with the `ok` discriminant, or use the combinator methods (`map`, `mapErr`, `andThen`, `match`, `unwrap`):
+
+```ts
+convert(from, to, rule).match(
+  (output) => use(output),
+  (error) => console.error(error.message),
 );
 ```
 
-## See also
+Each codec is also exported directly (`jsonLogicCodec`, `jsonRulesEngineCodec`, `filtrexCodec`, …) with its own `.parse` / `.emit`.
 
-- [json-rules-engine](https://github.com/CacheControl/json-rules-engine) — the source format.
-- [json-logic-js](https://github.com/jwadhams/json-logic-js) — the target format.
+## Fidelity & limitations
+
+rulebridge is deliberately honest: it never silently emits a wrong rule. When a construct can't be represented in the target, you get a structured `Err`. The convertible **predicate** layer is shared across all formats; the irreducible gaps are:
+
+- **Array quantifiers** (`some` / `all` / `none`) — expressible in json-logic and json-rules-engine, but **not** in the expression-string formats (filtrex, jexl, expr-eval, expression-eval, casbin matchers). Emitting a quantifier to those returns `Err`.
+- **Array literals** — supported by json-logic, jexl and expression-eval; **not** by filtrex, expr-eval or casbin (e.g. `in` against a literal array returns `Err` there — use a fact reference instead).
+- **Casbin beyond the matcher** — the PERM model (`model.conf` + `policy.csv`), RBAC role graphs and multi-rule effect aggregation are a different paradigm and are **not** converted. Only the matcher-expression fragment (`r.sub == p.sub && …`) is handled.
+- **Dynamic / runtime-only behaviour** — async fact resolution, custom operator registries, transforms and policy *effects* have no static representation. They return `Err` (`dynamic_construct` / `unsupported_construct`) rather than producing a rule that would evaluate differently.
+- **Equality semantics** — json-logic and expression-eval distinguish `==`/`===`; the IR carries an explicit `strict` flag so conversions preserve intent. The expression formats' own loose-vs-strict behaviour is matched per format.
+- **`json-logic` `in` overload** — JsonLogic's `in` means both array-membership and substring; the intent isn't statically detectable, so it parses to array-membership by default.
+
+Every error includes a `code` (`unsupported_construct`, `unsupported_operator`, `unsupported_value`, `unsupported_path`, `dynamic_construct`, `parse_error`, `emit_error`, `unrecognized_input`), a human-readable `message`, and where relevant the `format` and a `path` to the offending node.
+
+## Example
+
+A runnable example is in [`examples/01-basic-example.ts`](./examples/01-basic-example.ts).
 
 ## License
 
