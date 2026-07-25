@@ -287,7 +287,7 @@ select:focus,
 .feditor {
   position: relative;
   width: 100%;
-  height: 60px;
+  height: 112px;
 }
 .feditor .feditor-hl,
 .feditor #facts {
