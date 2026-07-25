@@ -1,8 +1,24 @@
 {
-  "extends": "@tsconfig/node16/tsconfig.json",
   "compilerOptions": {
-    "noImplicitAny": true
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true
   },
-  "include": ["src"],
-  "exclude": ["dist"]
+  "include": ["src", "examples", "scripts", "*.config.ts"],
+  "exclude": ["dist", "node_modules", "coverage"]
 }

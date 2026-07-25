@@ -1,18 +1,50 @@
 {
   "name": "json-rules-engine-to-json-logic",
-  "version": "0.1.2",
-  "description": "A minimal Typescript library for converting a json-rules-engine condition to a JsonLogic rule specification.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "version": "1.0.0",
+  "description": "Convert json-rules-engine conditions into JsonLogic rules. Zero runtime dependencies, full operator coverage, multi-version compatible, Rust-style Result API.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.cts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
-    "build": "rm -rf dist && tsc --project tsconfig.build.json",
-    "ci": "concurrently \"npm:lint\" \"npm:test\"",
-    "lint": "eslint src/",
-    "prepare": "husky install",
-    "test": "jest src/"
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "typecheck": "tsc --noEmit",
+    "ci": "npm run lint && npm run typecheck && npm run test:coverage && npm run build",
+    "compat-matrix": "node scripts/compat-matrix.mjs",
+    "changeset": "changeset",
+    "release": "npm run build && changeset publish",
+    "prepare": "husky"
   },
   "lint-staged": {
-    "**/*": "prettier --write --ignore-unknown"
+    "*.{ts,mts,cts,js,mjs,cjs,json,jsonc}": "biome check --write --no-errors-on-unmatched"
   },
   "repository": {
     "type": "git",
@@ -21,35 +53,35 @@
   "keywords": [
     "json-rules-engine",
     "json-logic",
-    "json-logic-js"
+    "json-logic-js",
+    "rules-engine",
+    "jsonlogic",
+    "converter",
+    "rules",
+    "business-rules"
   ],
   "author": "Alex Berriman <alexb@bezz.com.au>",
   "license": "MIT",
-  "sideEffects": false,
   "bugs": {
     "url": "https://github.com/alexberriman/json-rules-engine-to-json-logic/issues"
   },
   "homepage": "https://github.com/alexberriman/json-rules-engine-to-json-logic",
   "devDependencies": {
-    "@commitlint/cli": "^17.0.0",
-    "@commitlint/config-conventional": "^17.0.0",
-    "@tsconfig/node16": "^1.0.0",
-    "@types/jest": "^28.0.0",
-    "@types/json-logic-js": "^2.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.30.0",
-    "@typescript-eslint/parser": "^5.30.0",
-    "concurrently": "^7.2.2",
-    "eslint": "^8.19.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-jest": "^26.5.0",
-    "eslint-plugin-prettier": "^4.2.0",
-    "husky": "^8.0.0",
-    "jest": "^28.0.0",
-    "json-logic-js": "^2.0.0",
-    "json-rules-engine": "^6.1.0",
-    "lint-staged": "^13.0.0",
-    "prettier": "^2.7.0",
-    "ts-jest": "^28.0.0",
-    "typescript": "^4.7.0"
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@biomejs/biome": "^2.5.5",
+    "@changesets/cli": "^2.31.1",
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0",
+    "@types/json-logic-js": "^2.0.8",
+    "@vitest/coverage-v8": "^4.1.10",
+    "fast-check": "^4.9.0",
+    "husky": "^9.1.7",
+    "json-logic-js": "^2.0.5",
+    "json-rules-engine": "^7.3.1",
+    "lint-staged": "^17.2.0",
+    "publint": "^0.3.22",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
   }
 }
