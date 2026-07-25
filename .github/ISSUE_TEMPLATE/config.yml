@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question or discussion
+    url: https://github.com/alexberriman/rulebridge/discussions
+    about: Ask questions and discuss usage in Discussions.
+  - name: Read the docs
+    url: https://github.com/alexberriman/rulebridge#readme
+    about: The README covers supported formats, the API, and limitations.

@@ -1,0 +1,33 @@
+name: Feature request
+description: Suggest a new format, direction, or improvement.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you trying to do that rulebridge does not let you?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: The solution you'd like
+    validations:
+      required: true
+  - type: dropdown
+    id: format
+    attributes:
+      label: Is this about a specific format?
+      options:
+        - json-logic
+        - json-logic-engine
+        - json-rules-engine
+        - filtrex
+        - jexl
+        - expr-eval
+        - expression-eval
+        - casbin
+        - Not sure / other
+    validations:
+      required: false

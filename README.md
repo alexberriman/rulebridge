@@ -17,6 +17,14 @@
   <a href="https://www.npmjs.com/package/rulebridge"><img src="https://img.shields.io/npm/l/rulebridge?color=6366f1" alt="license"></a>
 </p>
 
+<p align="center">
+  <a href="https://alexberriman.github.io/rulebridge/"><strong>▶ Try the playground</strong></a>
+  &nbsp; · &nbsp;
+  <a href="https://www.npmjs.com/package/rulebridge">npm</a>
+  &nbsp; · &nbsp;
+  <a href="https://github.com/alexberriman/rulebridge">GitHub</a>
+</p>
+
 ## Contents
 
 - [Why](#why)

@@ -1,0 +1,52 @@
+name: Bug report
+description: Report a conversion that produces an incorrect or unexpected result.
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the incorrect conversion or error.
+    validations:
+      required: true
+  - type: input
+    id: from
+    attributes:
+      label: Input format
+      placeholder: e.g. json-rules-engine
+    validations:
+      required: true
+  - type: input
+    id: to
+    attributes:
+      label: Target format
+      placeholder: e.g. json-logic
+    validations:
+      required: true
+  - type: textarea
+    id: input
+    attributes:
+      label: Input rule
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output (what you got)
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: rulebridge version
+      placeholder: e.g. 0.1.1
+    validations:
+      required: true
