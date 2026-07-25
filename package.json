@@ -1,6 +1,6 @@
 {
   "name": "rulebridge",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Convert rules between json-rules-engine, JsonLogic, json-logic-engine, filtrex, jexl, expr-eval, expression-eval and Casbin matchers via a canonical intermediate representation. Zero runtime dependencies, Rust-style Result API.",
   "type": "module",
   "main": "./dist/index.cjs",
