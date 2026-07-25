@@ -80,7 +80,7 @@
     "@commitlint/cli": "^21.2.1",
     "@commitlint/config-conventional": "^21.2.0",
     "@types/json-logic-js": "^2.0.8",
-    "@types/node": "^24.0.0",
+    "@types/node": "^26.1.1",
     "@vitest/coverage-v8": "^4.1.10",
     "casbin": "^5.51.1",
     "expression-eval": "^5.0.1",
@@ -94,7 +94,7 @@
     "lint-staged": "^17.2.0",
     "publint": "^0.3.22",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3",
+    "typescript": "^7.0.2",
     "vitest": "^4.1.10"
   }
 }
