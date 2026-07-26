@@ -53,4 +53,4 @@ jobs:
       - run: npx publint
       - run: npx @arethetypeswrong/cli --pack
       - run: npm pack
-      - run: npx --yes package-contract@1.0.0 check ./rulebridge-*.tgz --reporter github
+      - run: npx package-contract check ./rulebridge-*.tgz --reporter github
