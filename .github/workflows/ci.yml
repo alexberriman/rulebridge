@@ -40,7 +40,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   package:
-    name: Validate package (publint & attw)
+    name: Validate package (publint, attw & package-contract)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -52,3 +52,5 @@ jobs:
       - run: npm run build
       - run: npx publint
       - run: npx @arethetypeswrong/cli --pack
+      - run: npm pack
+      - run: npx --yes package-contract@1.0.0 check ./rulebridge-*.tgz --reporter github
