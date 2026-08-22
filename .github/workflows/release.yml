@@ -28,7 +28,7 @@ jobs:
           registry-url: https://registry.npmjs.org
       - run: npm ci
       - name: Create release PR or publish
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
           publish: npm run release
           version: npx changeset version
